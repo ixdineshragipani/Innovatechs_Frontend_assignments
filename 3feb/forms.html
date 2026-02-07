@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <script>
+        function handleClick(event){
+            event.preventDefault();  //prevents reload
+            let name = document.querySelector("#name").value;
+            let email = document.querySelector("#email").value;
+            let date = document.querySelector("#date").value;
+            let userDetails={
+                name:name,
+                email:email,
+                date:date
+            }
+
+            console.log("Registered User Details:");
+            console.log(userDetails);
+
+
+            //document.getElementById("output").innerHTML=`name: ${name}| email:${email}| date:${date}`;
+
+        }
+    </script>
+</head>
+<body>
+    <h1>Registration Form</h1>
+    <form>
+        <p>Name: </p>
+        <input type="text" id="name"/>
+        <p>Email: </p>
+        <input type="email" id="email"/>
+        <p>Age</p>
+        <input type="date" id="date"/>
+        <button onclick="handleClick(event)">Submit</button>
+    </form>
+    <p id="output"></p>
+    
+</body>
+</html>
