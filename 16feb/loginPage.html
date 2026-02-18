@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="grid grid-cols-2 p-2 gap-[20px]">
+        <div class="grid bg-gradient-to-br from-[#EFEBFD] from-10% to-[#FCE9CE80] h-screen rounded-[24px] pr-5 pl-5 justify-center items-center col-span-1">
+            <img src="./assets/house.png">
+        </div>
+        <div class="grid col-span-1 gap-[30px] w-[700px]">
+            <div class=" w-full bg-[#F7F9FD]  rounded-[10px]">
+            </div>
+            <div class="bg-[#F7F9FD] rounded-[20px] h-[658px] w-full relative ">
+                <img src="./assets/activ.png" class="justify-center pt-[32px] items-center mx-auto h-[80px] w-[48px]"/>
+                <div class=" p-5" >
+                    <div>
+                        <h1 class="font-bold text-xl p-3">Login</h1>
+                        <div class="p-3">Email Address<span class="font-bold dark:text-red-500">*</span></div>
+                        <input type="text" placeholder="Username" class="p-3 w-full rounded-lg ">
+                        <div class="p-3">Password<span class="font-bold dark:text-red-500">*</span></div>
+                        <input type="password" placeholder="Password" class="p-3 w-full mx-auto rounded-lg">
+                        <img src="./assets/eye_icon.png" class="absolute right-[35px] top-[310px] h-[20px] w-[20px]"/>
+                    </div>
+                    <div class="flex pt-2 justify-end"><a href="#" class="text-[#6B40ED]">Forget Password?</a></div>
+                    <div class="pt-10"><button class="bg-[#6B40ED] p-4 w-full rounded-full">Login</button></div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

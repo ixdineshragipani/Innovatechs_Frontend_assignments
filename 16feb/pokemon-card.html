@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Playful Pokemon Card</title>
+</head>
+<body>
+  <div class="scene flex items-center justify-center">
+    <div id="app" class="card">
+      <div class="blob pt-20" aria-hidden></div>
+      <form id="searchForm" class="search-row" autocomplete="off">
+        <input id="searchInput" class=" right-[40px] w-[500px] pt-5 text-center shadow-xl justify-center rounded-[20px]" name="q" placeholder="Search Pokemon by name or ID (e.g. charizard or 6 use ID upto 1025) " />
+        <!-- <button type="submit" onclick="renderPokemon()" class="search-button">Search</button> -->
+      </form>
+      <!-- <div class="hint ">Tip: press Enter or click Search. Try names like <em>ditto</em>, <em>pikachu</em>, <em>bulbasaur</em>.</div> -->
+      <div id="content" class="pt-5">
+        <div>Loading pokemon…</div>
+        <div class="loader" role="status" aria-hidden></div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <div class="fixed inset-0 -z-10 bg-gradient-to-br from-white to-sky-500"></div>
+  <script src="poki.js"></script>
+</body>
+</html>
+
+
+
+
