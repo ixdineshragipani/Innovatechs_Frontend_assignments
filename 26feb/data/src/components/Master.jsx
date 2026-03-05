@@ -108,9 +108,8 @@ export default function MasterPage() {
 
   if (loading) {
     return (
-      <div className="page-container">
-        <div className="loading">
-          <div className="spinner" />
+      <div>
+        <div>
           Loading configurations...
         </div>
       </div>
@@ -129,11 +128,15 @@ const logout=()=>{
 
   return (
     <div>
-      <button onClick={logout}>Logout</button>
-      <h1>Master Configuration</h1>
+      <div className='flex w-full p-5 justify-end border-2'>
+        <button onClick={logout} className='p-2 border-2 hover:bg-red-500 rounded-lg'>Logout</button>
+      </div>
+      <div className='bg-green-700 h-screen'>
+        <h1 className='flex justify-center text-4xl'>Documents Configuration</h1>
+      
       <p>
         Control which documents users must upload for each application type.
-        Toggle the checkboxes to show or hide upload fields for users.
+        Toggle the checkboxes to show or hide upload fields for users and click on Save Configurations to save.
       </p>
 
       {message && (
@@ -143,22 +146,24 @@ const logout=()=>{
       )}
 
       <div>
+        <select>
         {APPLICATION_TYPES.map(type => (
-          <button
+          <option
             key={type}
-            className={`tab ${activeTab === type ? 'active' : ''}`}
+            className={`border-black p-2 hover:bg-gray-500 rounded-lg tab ${activeTab === type ? 'active' : ''}`}
             onClick={() => setActiveTab(type)}
           > {type.replace('APPLY_', '').replace('_', ' ')}
-          </button>
+          </option>
         ))}
+         </select>
       </div>
 
       <div >
-        <div >
+        {/* <div >
           <span className="ml-auto">
             {Object.values(currentConfig).filter(Boolean).length} / {Object.keys(DOCUMENT_META).length} enabled
           </span>
-        </div>
+        </div> */}
 
         <div className="mb-[2px]">
           Toggle the switch ON to make the document field visible to users. Toggle OFF to hide it.
@@ -215,7 +220,7 @@ const logout=()=>{
                     className={`status-chip ${enabled ? 'on' : 'off'}`}
                     style={{ fontSize: '0.8rem', padding: '0.25rem 0.7rem' }}
                   >
-                    {meta.icon} {meta.label}: {enabled ? '✓' : '✗'}
+                    {meta.icon} {meta.label}: {enabled ? 'Yes' : 'No'}
                   </span>
                 );
               })}
@@ -223,6 +228,7 @@ const logout=()=>{
           </div>
         ))}
       </div> */}
+      </div>
     </div>
   );
 }

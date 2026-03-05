@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 /**
  * CONFIG SCHEMA - MongoDB Collection: "configs"
  *
@@ -44,25 +43,3 @@ const configSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Config", configSchema);
-
-
-// const mongoose=require("mongoose");
-
-
-// const AppilcationSchema=new mongoose.Schema({
-//     applicationKey:{
-//         type:String,
-//         required:true,
-//         unique:true,
-//         enum:[APPLY_PASSPORT,APPLY_DRIVING_LICENSE,APPLY_NOC],
-//     },
-//     documents:{
-//         aadhar_card:{type:Boolean, default:false},
-//         pan_Card:{type:Boolean, default:false},
-//         tenth_memo:{type:Boolean, default:false},
-//         Twelth_memo:{type:Boolean, default:false},
-//     }
-// },{timestamps:true});
-
-
-// module.exports=mongoose.model("ApplicationConfig",AppilcationSchema)

@@ -43,7 +43,7 @@ router.get("/:applicationType", async (req, res) => {
   }
 });
 
-router.post("/:applicationType", async (req, res) => {
+router.put("/:applicationType", async (req, res) => {
   console.log(" HIT: PUT /api/config/" + req.params.applicationType);
   console.log("Body received:", JSON.stringify(req.body));
   try {

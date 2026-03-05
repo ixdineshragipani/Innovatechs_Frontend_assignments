@@ -28,8 +28,8 @@ mongoose
   .catch((err) => console.error(" MongoDB error:", err));
 
 // Routes
-const configRoutes   = require("./routes/AdminRoutes");
-const documentRoutes = require("./routes/UserRoutes");
+const configRoutes   = require("./Routes/AdminRoutes");
+const documentRoutes = require("./Routes/UserRoutes");
 
 app.use("/api/config",   configRoutes);
 app.use("/api/documents", documentRoutes);
@@ -44,4 +44,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-

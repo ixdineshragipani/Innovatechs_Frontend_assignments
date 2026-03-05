@@ -28,17 +28,23 @@ const handleKeyDown = (e) => {
     if (e.key === "Enter") login();
 }
   return (
-    <div>
-        <div className='flex-cols'>
-            <div>
-                <p>Username: </p>
-                <input type='text' placeholder='username' onChange={(e)=>setUserName(e.target.value)}/>
+    <div className='grid grid-cols-2'>
+        <div className='grid col-span-1 h-screen items-center'>
+            <img className="h-screen" src="../public/burj_al_arab.webp" alt="logo"/>
+        </div>
+        <div className='grid col-span-1 bg-gradient-to-br from-red-200 to-blue-200 border-black'>
+            <div className='flex flex-col justify-center items-center h-screen'>
+                <div className='p-[5px]'>
+                    <p className='p-[5px]'>Username: </p>
+                    <input type='text' placeholder=' Username' onChange={(e)=>setUserName(e.target.value)} className='rounded'/>
+                </div>
+                <div >
+                    <p className='p-[5px]'>Password: </p>
+                    <input type='password' placeholder=' Password' onChange={(e)=>{setPassword(e.target.value)}} className='rounded'/>
+                </div>
+                {<p className='text-red-500'>{error}</p>}
+                <button className="mt-[10px] p-1 bg-blue-500 hover:bg-blue-700 font-bold rounded" onClick={login}>Login</button>
             </div>
-            <div>
-                <p>Password</p>
-                <input type='password' placeholder='password' onChange={(e)=>{setPassword(e.target.value)}}/>
-            </div>
-            <button className="bg-blue-500 hover:bg-blue-700 font-bold rounded" onClick={login}>Login</button>
         </div>
     </div>
   )
