@@ -54,6 +54,7 @@ export default function UserPage() {
       setMessage({ type: 'error', text: 'No documents required. Contact admin.' });
       return;
     }
+    
 
     const missingFields = enabledFields
       .filter(([field]) => !files[field])
@@ -91,18 +92,22 @@ const logout=()=>{
 }
   return (
     <div>
-      <button onClick={logout}>Logout</button>
-      <h1 >User Portal</h1>
+      <div className='flex fixed p-2 w-full bg-red-100 justify-between'>
+        <p></p>
+        <h1 className='text-2xl' >User Portal</h1>
+        <button className='p-1 hover:bg-red-500 rounded-lg border-2 border-black' onClick={logout}>Logout</button>
+      </div>
       
+    <div className='flex p-5 pt-[80px] bg-gradient-to-br from-red-200 to-blue-100 h-screen flex-col gap-2'>
+      <div>
+        <div>Step 1: Application Details</div>
 
-      <div >
-        <div >Step 1: Application Details</div>
-
-        <div >
+        <div className='flex gap-2'>
           <label>Full Name</label>
           <input
             type="text"
-            placeholder="Enter your full name"
+            className='pl-3 rounded-full'
+            placeholder="  Enter your full name"
             value={userName}
             onChange={e => setUserName(e.target.value)}
           />
@@ -112,6 +117,7 @@ const logout=()=>{
           <label >Application Type</label>
           <select
             value={selectedType}
+            className='pl-3 rounded-full'
             onChange={e => setSelectedType(e.target.value)}
           >
             <option value="">-- Select Application Type --</option>
@@ -123,12 +129,12 @@ const logout=()=>{
       </div>
 
       {selectedType && (
-        <div className="card">
-          <div className="card-title">
-            Step 2: Upload Required Documents
+        <div>
+          <div>
+            Step 2: Upload Required Documents 
             {config && (
-              <span className="app-type-badge" style={{ marginLeft: 'auto' }}>
-                {enabledFields.length} document{enabledFields.length !== 1 ? 's' : ''} required
+              <span className="app-type-badge pl-2 text-blue-600">
+                 {enabledFields.length} document{enabledFields.length !== 1 ? 's' : ''} required
               </span>
             )}
           </div>
@@ -200,6 +206,7 @@ const logout=()=>{
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -18,6 +18,14 @@ export default function LandingPage() {
             setError("Please enter valid username and password");
             return;
         }
+        if(userName!=="admin" && !userName.includes("@")){
+            setError("Please enter valid username")
+            return;
+        }
+        if(password.length<8 && password!=="admin"){
+            setError("Please enter valid password");
+            return;
+        }
         if(userName==="admin" && password==="admin"){
             navigate("master");
         }else{

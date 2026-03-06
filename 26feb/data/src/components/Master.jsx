@@ -128,48 +128,51 @@ const logout=()=>{
 
   return (
     <div>
-      <div className='flex w-full p-5 justify-end border-2'>
-        <button onClick={logout} className='p-2 border-2 hover:bg-red-500 rounded-lg'>Logout</button>
+      <div className='flex fixed bg-red-200 w-full h-[60px] p-2 justify-between border-2'>
+        <img className='flex h-[40px] w-[50px]' src='https://images.seeklogo.com/logo-png/54/1/government-of-dubai-logo-png_seeklogo-547455.png'/>
+         <h1 className='flex justify-center text-4xl'>Documents Configuration</h1>
+        <div className=' pb-[25px] border-2 h-[20px] w-[60px] hover:bg-red-500 rounded-lg'>
+          <button onClick={logout} className='pb-3 pl-0.5'>Logout</button></div>
       </div>
-      <div className='bg-green-700 h-screen'>
-        <h1 className='flex justify-center text-4xl'>Documents Configuration</h1>
+      <div className='pt-[60px] bg-gradient-to-br from-red-200 to-blue-200 h-screen'>
+       
       
-      <p>
-        Control which documents users must upload for each application type.
+      <p className='p-3'>
+        Manage which documents users must upload for each application type.
         Toggle the checkboxes to show or hide upload fields for users and click on Save Configurations to save.
       </p>
 
       {message && (
-        <div className={`alert alert-${message.type === 'success' ? 'success' : 'error'}`}>
+        <div className={`p-3 alert alert-${message.type === 'success' ? 'success' : 'error'}`}>
           {message.text}
         </div>
       )}
 
-      <div>
-        <select>
-        {APPLICATION_TYPES.map(type => (
-          <option
+      
+        <div className='flex gap-3 p-3'>
+          Select Document: {APPLICATION_TYPES.map(type => (
+          <button
             key={type}
-            className={`border-black p-2 hover:bg-gray-500 rounded-lg tab ${activeTab === type ? 'active' : ''}`}
+            className={`p-2 hover:bg-gray-500  border border-black rounded-lg tab ${activeTab === type ? 'active' : ''}`}
             onClick={() => setActiveTab(type)}
-          > {type.replace('APPLY_', '').replace('_', ' ')}
-          </option>
+          > {type.replace('APPLY_', '')}
+          </button>
         ))}
-         </select>
-      </div>
+         </div>
+     
 
-      <div >
+      <div className='p-3'>
         {/* <div >
           <span className="ml-auto">
             {Object.values(currentConfig).filter(Boolean).length} / {Object.keys(DOCUMENT_META).length} enabled
           </span>
         </div> */}
 
-        <div className="mb-[2px]">
+        <div className="mb-[2px] p-3">
           Toggle the switch ON to make the document field visible to users. Toggle OFF to hide it.
         </div>
 
-        <div >
+        <div className='flex bg-gray-500 rounded-[10px] justify-between p-3'>
           {Object.entries(DOCUMENT_META).map(([field, meta]) => {
             const isEnabled = currentConfig[field] ?? false;
             return (
@@ -178,7 +181,7 @@ const logout=()=>{
                   <span>{meta.icon}</span>
                   {meta.label}
                 </span>
-                <div >
+                <div className='flex'>
                   <span className={`status-chip ${isEnabled ? 'on' : 'off'}`}>
                     {isEnabled ? 'ON' : 'OFF'}
                   </span>
@@ -196,13 +199,13 @@ const logout=()=>{
           })}
         </div>
 
-        <div >
+        <div className='text-[10px] pt-2 w-[90px]'>
           <button
-            className="btn btn-primary"
+            className="btn btn-primary h-[30px] w-[150px] hover:bg-gray-600 border-2 border-black rounded-lg"
             onClick={() => handleSave(activeTab)}
             disabled={saving === activeTab}
           >
-            {saving === activeTab ? 'Saving...' : ' Save Configuration'}
+            {saving === activeTab ? 'Saving...' : ' Save Configurations'}
           </button>
         </div>
       </div>
