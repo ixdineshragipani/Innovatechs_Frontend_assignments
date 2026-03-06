@@ -196,7 +196,7 @@ const logout=()=>{
               </div>
 
               <button
-                className="btn btn-success"
+                className="btn btn-success p-2 hover:bg-red-300 rounded-lg"
                 onClick={handleSubmit}
                 disabled={submitting}
               >
