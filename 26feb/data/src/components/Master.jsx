@@ -160,7 +160,7 @@ const logout=()=>{
         ))}
          </div>
 
-         <div className="flex gap-3 p-3">You are making configurations of {activeTab.replace('APPLY_'," ").toLowerCase()}</div>
+         <div className="flex gap-3 p-3">You are making configurations of <div className="text-blue-600">"{activeTab.replace('APPLY_'," ").toLowerCase()} "</div></div>
      
 
       <div className='p-3'>
