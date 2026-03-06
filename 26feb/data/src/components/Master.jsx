@@ -159,6 +159,8 @@ const logout=()=>{
           </button>
         ))}
          </div>
+
+         <div className="flex gap-3 p-3">You are making configurations of {activeTab.replace('APPLY_'," ").toLowerCase()}</div>
      
 
       <div className='p-3'>
@@ -167,6 +169,7 @@ const logout=()=>{
             {Object.values(currentConfig).filter(Boolean).length} / {Object.keys(DOCUMENT_META).length} enabled
           </span>
         </div> */}
+        
 
         <div className="mb-[2px] p-3">
           Toggle the switch ON to make the document field visible to users. Toggle OFF to hide it.

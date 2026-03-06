@@ -54,7 +54,10 @@ export default function UserPage() {
       setMessage({ type: 'error', text: 'No documents required. Contact admin.' });
       return;
     }
-    
+    if(!userName){
+      setMessage("Enter the username")
+      return;
+    }
 
     const missingFields = enabledFields
       .filter(([field]) => !files[field])
@@ -112,7 +115,7 @@ const logout=()=>{
             onChange={e => setUserName(e.target.value)}
           />
         </div>
-
+        
         <div>
           <label >Application Type</label>
           <select
@@ -162,7 +165,7 @@ const logout=()=>{
                 All fields are mandatory.
               </div>
 
-              <div className="doc-grid">
+              <div>
                 {enabledFields.map(([field]) => {
                   const meta = DOCUMENT_META[field];
                   const file = files[field];
@@ -172,7 +175,7 @@ const logout=()=>{
                         <span className="upload-icon">{meta.icon}</span>
                         <strong style={{ fontSize: '0.9rem' }}>{meta.label}</strong>
                         {file ? (
-                          <span className="file-name"> {file.name}</span>
+                          <span > {file.name}</span>
                         ) : (
                           <span className="upload-text">
                             <strong>Click to upload</strong> or drag & drop

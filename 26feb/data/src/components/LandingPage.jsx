@@ -3,7 +3,6 @@ import { useState,useEffect } from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import master from './Master'
 import config from './Config'
-import navbar from './Navbar'
 
 
 
