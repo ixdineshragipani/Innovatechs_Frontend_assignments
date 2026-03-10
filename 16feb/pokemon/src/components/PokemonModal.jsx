@@ -13,8 +13,10 @@ function StatBar({ label, value }) {
   );
 }
 
+
 export default function PokemonModal({ pokemon, onClose }) {
   if (!pokemon) return null;
+  
 
   return (
     <div
@@ -43,7 +45,7 @@ export default function PokemonModal({ pokemon, onClose }) {
             </div>
           </div>
 
-          <button onClick={onClose} className="text-slate-500 border-black hover:bg-blue-500 hover:text-slate-800">Close</button>
+          <button onClick={onClose} className="text-slate-500 border-black rounded-lg hover:text-red-500">Close</button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
@@ -51,11 +53,11 @@ export default function PokemonModal({ pokemon, onClose }) {
             <div className="flex gap-4">
               <div>
                 <div className="text-xs text-slate-500">Height</div>
-                <div className="font-medium">{pokemon.height}</div>
+                <div className="font-medium"> {(pokemon.height/10)} feets</div>
               </div>
               <div>
                 <div className="text-xs text-slate-500">Weight</div>
-                <div className="font-medium">{pokemon.weight/10}</div>
+                <div className="font-medium">{pokemon.weight/10} kgs</div>
               </div>
             </div>
 
@@ -71,7 +73,7 @@ export default function PokemonModal({ pokemon, onClose }) {
             <div>
               <div className="text-sm font-semibold mb-2">Top Moves</div>
               <div className="flex flex-wrap gap-2">
-                {pokemon.moves.slice(0, 8).map((m) => (
+                {pokemon.moves.slice(0, 5).map((m) => (
                   <span key={m.move.name} className="text-xs px-2 py-1 bg-slate-100 rounded capitalize">{m.move.name}</span>
                 ))}
               </div>

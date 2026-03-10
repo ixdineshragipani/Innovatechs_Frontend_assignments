@@ -30,7 +30,7 @@ const configSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true, // One config document per application type
-      enum: ["APPLY_PASSPORT", "APPLY_DRIVING_LICENCE", "APPLY_NOC"],
+      // enum: ["APPLY_PASSPORT", "APPLY_DRIVING_LICENCE", "APPLY_NOC"],
     },
     documents: {
       aadhar_card: { type: documentFieldSchema, default: { display: false } },

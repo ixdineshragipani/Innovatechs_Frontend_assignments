@@ -5,7 +5,6 @@ import master from './Master'
 import config from './Config'
 
 
-
 export default function LandingPage() {
     const [userName,setUserName]=useState("");
     const [password , setPassword]=useState("");
@@ -32,7 +31,7 @@ export default function LandingPage() {
         }
   };
 const handleKeyDown = (e) => {
-    if (e.key === "Enter") login();
+    if (e.key === "Enter"){login()};
 }
   return (
     <div className='grid grid-cols-2'>

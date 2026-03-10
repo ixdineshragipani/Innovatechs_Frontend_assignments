@@ -101,34 +101,34 @@ const logout=()=>{
         <button className='p-1 hover:bg-red-500 rounded-lg border-2 border-black' onClick={logout}>Logout</button>
       </div>
       
-    <div className='flex p-5 pt-[80px] bg-gradient-to-br from-red-200 to-blue-100 h-screen flex-col gap-2'>
-      <div>
-        <div>Step 1: Application Details</div>
-
-        <div className='flex gap-2'>
-          <label>Full Name</label>
-          <input
-            type="text"
-            className='pl-3 rounded-full'
-            placeholder="  Enter your full name"
-            value={userName}
-            onChange={e => setUserName(e.target.value)}
-          />
-        </div>
-        
+      <div className='flex p-5 pt-[80px] bg-gradient-to-br from-red-200 to-blue-100 h-auto flex-col gap-2'>
         <div>
-          <label >Application Type</label>
-          <select
-            value={selectedType}
-            className='pl-3 rounded-full'
-            onChange={e => setSelectedType(e.target.value)}
-          >
-            <option value="">-- Select Application Type --</option>
-            {APPLICATION_TYPES.map(type => (
-              <option key={type} value={type}>{type.replace(/_/g, ' ')}</option>
-            ))}
-          </select>
-        </div>
+          <div>Step 1: Application Details</div>
+
+          <div className='flex gap-2'>
+            <label>Full Name</label>
+            <input
+              type="text"
+              className='pl-3 rounded-full'
+              placeholder=" Enter your full name"
+              value={userName}
+              onChange={e => setUserName(e.target.value)}
+            />
+          </div>
+          
+          <div>
+            <label >Application Type</label>
+            <select
+              value={selectedType}
+              className='pl-3 rounded-full'
+              onChange={e => setSelectedType(e.target.value)}
+            >
+              <option value="">-- Select Application Type --</option>
+              {APPLICATION_TYPES.map(type => (
+                <option key={type} value={type}>{type.replace(/_/g, ' ')}</option>
+              ))}
+            </select>
+          </div>
       </div>
 
       {selectedType && (
@@ -178,7 +178,7 @@ const logout=()=>{
                           <span > {file.name}</span>
                         ) : (
                           <span className="upload-text">
-                            <strong>Click to upload</strong> or drag & drop
+                            <strong>Click to upload <sup className="text-red-500 font-bold">*</sup></strong> or drag & drop
                             <br />JPG, PNG or PDF (max 5MB)
                           </span>
                         )}
@@ -195,7 +195,7 @@ const logout=()=>{
               </div>
 
               <div style={{ marginTop: '1rem', fontSize: '0.85rem', color: '#64748b' }}>
-                {Object.keys(files).length} of {enabledFields.length} files selected
+                {Object.keys(files).length} of {enabledFields.length} files uploaded
               </div>
 
               <button
@@ -205,6 +205,35 @@ const logout=()=>{
               >
                 {submitting ? 'Submitting...' : 'Submit Documents'}
               </button>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br><p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
+              <p></p><br></br>
             </>
           )}
         </div>

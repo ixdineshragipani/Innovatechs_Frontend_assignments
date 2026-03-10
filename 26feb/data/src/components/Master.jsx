@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getAllConfigs, updateConfig } from '../api/index';
 import { useNavigate } from 'react-router-dom';
-import landingPage from './LandingPage';
+// import configuration from './Configuration';
 
 
 const APPLICATION_TYPES = ['APPLY_PASSPORT', 'APPLY_DRIVING_LICENCE', 'APPLY_NOC'];
@@ -87,6 +87,7 @@ export default function MasterPage() {
     }));
   };
 
+
   const handleSave = async (applicationType) => {
     setSaving(applicationType);
     setMessage(null);
@@ -126,6 +127,10 @@ const logout=()=>{
   navigate("/");
 }
 
+// const handleAdd=()=>{
+//   navigate("/configuration");
+// }
+
   return (
     <div>
       <div className='flex fixed bg-red-200 w-full h-[60px] p-2 justify-between border-2'>
@@ -134,48 +139,52 @@ const logout=()=>{
         <div className=' pb-[25px] border-2 h-[20px] w-[60px] hover:bg-red-500 rounded-lg'>
           <button onClick={logout} className='pb-3 pl-0.5'>Logout</button></div>
       </div>
-      <div className='pt-[60px] bg-gradient-to-br from-red-200 to-blue-200 h-screen'>
+      <div className='pt-[60px] bg-gradient-to-br from-red-200 to-blue-200 h-auto'>
        
       
-      <p className='p-3'>
-        Manage which documents users must upload for each application type.
-        Toggle the checkboxes to show or hide upload fields for users and click on Save Configurations to save.
-      </p>
+        <p className='p-3'>
+          Manage which documents users must upload for each application type.
+          Toggle the checkboxes to show or hide upload fields for users and click on Save Configurations to save.
+        </p>
 
-      {message && (
-        <div className={`p-3 alert alert-${message.type === 'success' ? 'success' : 'error'}`}>
-          {message.text}
+        {message && (
+          <div className={`p-3 alert alert-${message.type === 'success' ? 'success' : 'error'}`}>
+            {message.text}
         </div>
-      )}
+        )}
 
       
-        <div className='flex gap-3 p-3'>
-          Select Document: {APPLICATION_TYPES.map(type => (
+        <div className='flex w-full gap-3 p-3'>
+          Select Type: {APPLICATION_TYPES.map(type => (
           <button
             key={type}
             className={`p-2 hover:bg-gray-500  border border-black rounded-lg tab ${activeTab === type ? 'active' : ''}`}
             onClick={() => setActiveTab(type)}
           > {type.replace('APPLY_', '')}
           </button>
+          
         ))}
          </div>
+         {/* <div>
+          <button className='p-2 hover:bg-gray-500 border border-black rounded-lg' onClick={handleAdd}>Add another configuration</button>
+         </div> */}
 
          <div className="flex gap-3 p-3">You are making configurations of <div className="text-blue-600">"{activeTab.replace('APPLY_'," ").toLowerCase()} "</div></div>
      
 
-      <div className='p-3'>
-        {/* <div >
-          <span className="ml-auto">
-            {Object.values(currentConfig).filter(Boolean).length} / {Object.keys(DOCUMENT_META).length} enabled
-          </span>
-        </div> */}
-        
+        <div className='p-3'>
+          {/* <div >
+            <span className="ml-auto">
+              {Object.values(currentConfig).filter(Boolean).length} / {Object.keys(DOCUMENT_META).length} enabled
+            </span>
+          </div> */}
+          
 
-        <div className="mb-[2px] p-3">
-          Toggle the switch ON to make the document field visible to users. Toggle OFF to hide it.
-        </div>
+          <div className="mb-[2px] p-3">
+            Toggle the switch ON to make the document field visible to users. Toggle OFF to hide it.
+          </div>
 
-        <div className='flex bg-gray-500 rounded-[10px] justify-between p-3'>
+          <div className='flex bg-gray-500 rounded-[10px] justify-between p-3'>
           {Object.entries(DOCUMENT_META).map(([field, meta]) => {
             const isEnabled = currentConfig[field] ?? false;
             return (
@@ -211,6 +220,21 @@ const logout=()=>{
             {saving === activeTab ? 'Saving...' : ' Save Configurations'}
           </button>
         </div>
+        <p></p><br></br>
+        <p></p><br></br>
+        <p></p><br></br>
+        <p></p><br></br>
+        <p></p><br></br>
+        <p></p><br></br><p></p><br></br>
+        <p></p><br></br>
+        <p></p><br></br>
+        <p></p><br></br>
+        <p></p><br></br>
+        <p></p><br></br><p></p><br></br>
+        <p></p><br></br>
+        <p></p><br></br>
+        <p></p><br></br>
+
       </div>
 
       {/* <div className="card">

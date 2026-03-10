@@ -13,13 +13,12 @@ function PokemonCard({ pokemon, onClick }) {
       role="button"
       tabIndex={0}
       className="rounded-xl shadow-lg p-4 text-white text-center transition transform hover:scale-105 cursor-pointer"
-      style={{ background: `linear-gradient(135deg, ${bgColor}33, ${bgColor})` }}
-    >
+      style={{ background: `linear-gradient(135deg, ${bgColor}33, ${bgColor})` }}>
+
       <img
         src={pokemon.sprites.other?.['official-artwork']?.front_default || pokemon.sprites.front_default}
         alt={pokemon.name}
-        className="mx-auto w-28 h-28"
-      />
+        className="mx-auto w-28 h-28"/>
 
       <h2 className="text-lg font-extrabold capitalize mt-2">{pokemon.name}</h2>
 

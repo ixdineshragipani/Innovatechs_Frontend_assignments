@@ -30,7 +30,7 @@ const ForgetPassword=()=>{
                         <div className="p-3">Email Address<span className="font-bold dark:text-red-500">*</span></div>
                         <input type="text" placeholder="Enter Email Address" className="p-3 bg-white w-full rounded-lg "/>
                     </div>
-                    <div id="otp-section" className="pt-3"> 
+                    {/* <div id="otp-section" className="pt-3"> 
                         <div>Enter OTP<span className="text-bold dark:text-red-500">*</span></div>
                         <div className="otp-wrapper">
                             {
@@ -49,7 +49,7 @@ const ForgetPassword=()=>{
                                 })
                             }
                         </div>
-                    </div>
+                    </div> */}
                     <div className="pt-10"><button onClick={handleSendOTP} className="bg-[#6B40ED] text-white p-4 w-full rounded-full">Send OTP</button></div>
                     <div className="flex justify-center p-3">
                         Didn't revieve otp? <a href="#" className="text-bold underline">Send again otp in  {handleTimer} sec</a>
