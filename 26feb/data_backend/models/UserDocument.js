@@ -38,7 +38,7 @@ const userDocumentSchema = new mongoose.Schema(
     applicationType: {
       type: String,
       required: true,
-      // enum: ["APPLY_PASSPORT", "APPLY_DRIVING_LICENCE", "APPLY_NOC"],
+      enum: ["APPLY_PASSPORT", "APPLY_DRIVING_LICENCE", "APPLY_NOC"],
     },
     files: {
       aadhar_card: { type: fileFieldSchema, default: null },

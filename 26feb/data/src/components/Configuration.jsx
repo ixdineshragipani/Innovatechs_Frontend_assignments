@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { getAllConfigs, createType, deleteType } from '../api/index';
-import { useNavigate } from 'react-router-dom';
-
-const DEFAULT_TYPES = ["APPLY_PASSPORT", "APPLY_DRIVING_LICENCE", "APPLY_NOC"];
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getAllConfigs, createType, deleteType } from "../api/index";
+import { Loader2, CheckCircle, XCircle, Trash2, Plus } from "lucide-react";
+import dubaiEmblem from "../assets/dubai-emblem.png";
+import dubaiSkyline from "../assets/dubai-skyline.jpg";
 
 export default function Configuration() {
   const [types, setTypes]           = useState([]);
@@ -14,6 +15,7 @@ export default function Configuration() {
 
   const navigate = useNavigate();
 
+  // Load all types from DB on mount
   useEffect(() => {
     fetchTypes();
   }, []);
@@ -35,6 +37,7 @@ export default function Configuration() {
     setTimeout(() => setMessage(null), 3000);
   };
 
+  // ── Create new type ──────────────────────────────────────
   const handleCreate = async () => {
     if (!newType.trim()) {
       showMessage("error", "Please enter an application type name.");
@@ -54,6 +57,7 @@ export default function Configuration() {
     }
   };
 
+  // ── Delete type ──────────────────────────────────────────
   const handleDelete = async (applicationType) => {
     if (!window.confirm(`Delete "${applicationType}"? This cannot be undone.`)) return;
     setDeletingId(applicationType);
@@ -73,168 +77,199 @@ export default function Configuration() {
     if (e.key === "Enter") handleCreate();
   };
 
-  const logout = () => navigate("/");
-
   return (
-    <div>
-      {/* Navbar — same style as Master.jsx */}
-      <div className='flex fixed bg-red-200 w-full h-[60px] p-2 justify-between border-2 z-10'>
-        <img
-          className='flex h-[40px] w-[50px]'
-          src='https://images.seeklogo.com/logo-png/54/1/government-of-dubai-logo-png_seeklogo-547455.png'
-        />
-        <h1 className='flex justify-center text-4xl'>Application Type Configuration</h1>
-        <div className='pb-[25px] border-2 h-[20px] w-[60px] hover:bg-red-500 rounded-lg'>
-          <button onClick={logout} className='pb-3 pl-0.5'>Logout</button>
-        </div>
-      </div>
+    <div className="relative min-h-screen overflow-hidden">
 
-      {/* Page content */}
-      <div className='pt-[60px] bg-gradient-to-br from-red-200 to-blue-200 min-h-screen'>
+      {/* Background */}
+      <div className="fixed inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${dubaiSkyline})` }} />
+      <div className="fixed inset-0 bg-gradient-to-br from-[#152240]/55 via-[#152240]/50 to-[#152240]/55" />
+      <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FFBF00] to-transparent z-20" />
+      <div className="fixed bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FFBF00] to-transparent z-20" />
 
-        <p className='p-3 text-gray-700'>
-          Add new application types here. They will appear as tabs in Master Configuration
-          and as options in the User page dropdown.
-        </p>
+      <div className="relative z-10 min-h-screen flex flex-col">
 
-        {/* Message */}
-        {message && (
-          <div className={`mx-3 mb-3 p-3 rounded-lg font-medium ${
-            message.type === 'success'
-              ? 'bg-green-100 text-green-800 border border-green-300'
-              : 'bg-red-100 text-red-800 border border-red-300'
-          }`}>
-            {message.type === 'success' ? '✅' : '⚠️'} {message.text}
+        {/* Header */}
+        <header className="backdrop-blur-xl bg-white/5 border-b border-[#FFBF00]/20 px-6 py-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <img src={dubaiEmblem} alt="Dubai Emblem" className="w-10 h-10 object-contain" />
+              <div>
+                <h1 className="text-lg font-bold text-[#FFBF00] tracking-wide">Government of Dubai</h1>
+                <p className="text-[#FFBF00]/50 text-xs tracking-widest uppercase">
+                  Application Type Management
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              {/* Back to Master */}
+              <button
+                onClick={() => navigate("/master")}
+                className="flex items-center gap-2 backdrop-blur-xl bg-white/10 border border-[#FFBF00]/30 text-[#FFBF00] font-semibold rounded-xl px-5 py-2.5 hover:bg-[#FFBF00]/10 transition-all duration-300"
+              >
+                Back to Master
+              </button>
+              {/* Logout */}
+              <button
+                onClick={() => navigate("/")}
+                className="flex items-center gap-2 bg-gradient-to-r from-[#FFBF00] to-[#FFBF00]/40 text-[#152240] font-semibold rounded-xl px-5 py-2.5 hover:from-[#FFBF00] hover:to-[#FFBF00] transition-all duration-300 shadow-lg shadow-[#FFBF00]/20"
+              >
+                Logout
+              </button>
+            </div>
           </div>
-        )}
+        </header>
 
-        {/* Add New Type Card */}
-        <div className='mx-3 mb-4 bg-white rounded-xl p-4 shadow border border-gray-200'>
-          <h2 className='text-lg font-semibold text-blue-900 mb-1'>➕ Add New Application Type</h2>
-          <p className='text-sm text-gray-500 mb-3'>
-            Type a name like <strong>Birth Certificate</strong> — it will be saved as{' '}
-            <strong>APPLY_BIRTH_CERTIFICATE</strong> automatically.
-          </p>
+        {/* Main */}
+        <main className="flex-1 p-6 max-w-3xl mx-auto w-full space-y-6">
 
-          {/* Input row */}
-          <div className='flex gap-3'>
-            <input
-              type='text'
-              placeholder='e.g. Birth Certificate or APPLY_BIRTH_CERTIFICATE'
-              value={newType}
-              onChange={(e) => setNewType(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className='flex-1 p-2 border border-gray-400 rounded-lg outline-none text-sm'
-            />
-            <button
-              onClick={handleCreate}
-              disabled={creating}
-              className='px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg border border-blue-800 disabled:opacity-50'
-            >
-              {creating ? 'Adding...' : '➕ Add'}
-            </button>
-          </div>
-
-          {/* Live preview of formatted name */}
-          {newType.trim() && (
-            <p className='mt-2 text-sm text-gray-500'>
-              Will be saved as:{' '}
-              <strong className='text-blue-600'>
-                {newType.trim().toUpperCase().replace(/\s+/g, '_')}
-              </strong>
+          {/* Title */}
+          <div>
+            <h2 className="text-2xl font-bold text-[#FFBF00]">Manage Application Types</h2>
+            <p className="text-[#FFBF00]/60 text-sm mt-1">
+              Add new application types or delete existing ones.
+              Changes reflect immediately in Master Config and User Portal.
             </p>
+          </div>
+
+          {/* Message */}
+          {message && (
+            <div className={`flex items-center gap-2 text-sm rounded-xl px-4 py-3 border ${
+              message.type === "success"
+                ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+                : "bg-red-500/10 border-red-500/20 text-red-400"
+            }`}>
+              {message.type === "success"
+                ? <CheckCircle className="w-4 h-4 shrink-0" />
+                : <XCircle    className="w-4 h-4 shrink-0" />}
+              {message.text}
+            </div>
           )}
-        </div>
 
-        {/* All Types List Card */}
-        <div className='mx-3 bg-white rounded-xl p-4 shadow border border-gray-200'>
-          <h2 className='text-lg font-semibold text-blue-900 mb-3'>
-            📋 All Application Types{' '}
-            <span className='text-sm bg-blue-100 text-blue-700 font-semibold px-2 py-0.5 rounded-full ml-1'>
-              {types.length}
-            </span>
-          </h2>
+          {/* Add New Type Card */}
+          <div className="backdrop-blur-xl bg-white/10 border border-[#FFBF00]/20 rounded-2xl shadow-xl overflow-hidden">
+            <div className="px-6 py-4 border-b border-[#FFBF00]/10">
+              <h3 className="text-[#FFBF00] text-lg font-semibold flex items-center gap-2">
+                <Plus className="w-5 h-5 text-[#FFBF00]/70" />
+                Add New Application Type
+              </h3>
+              <p className="text-[#FFBF00]/40 text-xs mt-1">
+                Type a name like <strong className="text-[#FFBF00]/60">Birth Certificate</strong> — 
+                it will be saved as <strong className="text-[#FFBF00]/60">APPLY_BIRTH_CERTIFICATE</strong>
+              </p>
+            </div>
 
-          {loading ? (
-            <div className='text-center py-8 text-gray-400'>Loading...</div>
-          ) : types.length === 0 ? (
-            <div className='text-center py-8 text-gray-400'>No types found.</div>
-          ) : (
-            <div className='flex flex-col gap-3'>
-              {types.map((config) => {
-                const isDefault    = DEFAULT_TYPES.includes(config.applicationType);
-                const enabledCount = Object.values(config.documents || {})
-                  .filter(d => d?.display).length;
+            <div className="p-6 space-y-3">
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  placeholder="e.g. Birth Certificate"
+                  value={newType}
+                  onChange={e => setNewType(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="flex-1 bg-white/10 border border-[#FFBF00]/20 text-[#FFBF00] placeholder-[#FFBF00]/30 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#FFBF00]/60 focus:bg-white/15 transition-all"
+                />
+                <button
+                  onClick={handleCreate}
+                  disabled={creating}
+                  className="flex items-center gap-2 bg-gradient-to-r from-[#FFBF00] to-yellow-500 text-[#152240] font-semibold rounded-xl px-6 py-2.5 hover:from-[#FFBF00] hover:to-[#FFBF00] transition-all duration-300 shadow-lg shadow-[#FFBF00]/20 disabled:opacity-50 whitespace-nowrap"
+                >
+                  {creating
+                    ? <><Loader2 className="w-4 h-4 animate-spin" /> Adding...</>
+                    : <><Plus className="w-4 h-4" /> Add Type</>}
+                </button>
+              </div>
 
-                return (
-                  <div
-                    key={config._id}
-                    className='flex justify-between items-center p-3 border border-gray-200 rounded-lg bg-gray-50 flex-wrap gap-2'
-                  >
-                    {/* Left — name + meta */}
-                    <div>
-                      <div className='font-semibold text-blue-900 text-sm'>
-                        {isDefault ? '🔒' : '📝'} {config.applicationType}
-                      </div>
-                      <div className='flex items-center gap-2 mt-1'>
-                        <span className='text-xs text-gray-500'>
-                          {enabledCount} doc{enabledCount !== 1 ? 's' : ''} enabled
-                        </span>
-                        {isDefault && (
-                          <span className='text-xs bg-yellow-100 text-yellow-700 font-semibold px-2 py-0.5 rounded-full'>
-                            Default
+              {/* Live preview */}
+              {newType.trim() && (
+                <p className="text-[#FFBF00]/40 text-xs">
+                  Will be saved as:{" "}
+                  <strong className="text-[#FFBF00]/70">
+                    {newType.trim().toUpperCase().startsWith("APPLY_")
+                      ? newType.trim().toUpperCase().replace(/\s+/g, "_")
+                      : `APPLY_${newType.trim().toUpperCase().replace(/\s+/g, "_")}`}
+                  </strong>
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* All Types List */}
+          <div className="backdrop-blur-xl bg-white/10 border border-[#FFBF00]/20 rounded-2xl shadow-xl overflow-hidden">
+            <div className="px-6 py-4 border-b border-[#FFBF00]/10 flex items-center justify-between">
+              <h3 className="text-[#FFBF00] text-lg font-semibold">
+                All Application Types
+              </h3>
+              <span className="text-xs bg-[#FFBF00]/10 border border-[#FFBF00]/30 text-[#FFBF00]/70 px-3 py-1 rounded-full font-medium">
+                {types.length} total
+              </span>
+            </div>
+
+            <div className="p-6">
+              {loading ? (
+                <div className="flex items-center justify-center gap-2 py-8 text-[#FFBF00]/50">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Loading...
+                </div>
+              ) : types.length === 0 ? (
+                <div className="text-center py-8 text-[#FFBF00]/40 text-sm">
+                  No application types found.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {types.map(config => {
+                    const enabledCount = Object.values(config.documents || {})
+                      .filter(d => d?.display).length;
+
+                    return (
+                      <div
+                        key={config._id}
+                        className="flex items-center justify-between p-4 rounded-xl border border-[#FFBF00]/15 bg-white/5 hover:bg-white/10 transition-all gap-3 flex-wrap"
+                      >
+                        {/* Left — name + meta */}
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[#FFBF00] font-semibold text-sm">
+                            {config.applicationType}
                           </span>
-                        )}
-                      </div>
-                    </div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-[#FFBF00]/40 text-xs">
+                              {enabledCount} doc{enabledCount !== 1 ? "s" : ""} enabled
+                            </span>
+                            {/* Doc chips */}
+                            {Object.entries(config.documents || {}).map(([field, val]) => (
+                              <span
+                                key={field}
+                                className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                                  val?.display
+                                    ? "bg-emerald-500/20 text-emerald-400"
+                                    : "bg-white/10 text-[#FFBF00]/30"
+                                }`}
+                              >
+                                {field.replace(/_/g, " ")}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
 
-                    {/* Right — doc chips + delete */}
-                    <div className='flex items-center gap-2 flex-wrap'>
-
-                      {/* Document status chips */}
-                      <div className='flex gap-1 flex-wrap'>
-                        {Object.entries(config.documents || {}).map(([field, val]) => (
-                          <span
-                            key={field}
-                            className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                              val?.display
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-gray-100 text-gray-400'
-                            }`}
-                          >
-                            {field.replace(/_/g, ' ')}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Delete — only for non-default */}
-                      {!isDefault && (
+                        {/* Right — Delete button */}
                         <button
                           onClick={() => handleDelete(config.applicationType)}
                           disabled={deletingId === config.applicationType}
-                          className='px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 border border-red-300 rounded-lg text-xs font-semibold disabled:opacity-50'
+                          className="flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40 rounded-xl text-xs font-semibold transition-all disabled:opacity-50"
                         >
-                          {deletingId === config.applicationType ? 'Deleting...' : '🗑️ Delete'}
+                          {deletingId === config.applicationType
+                            ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Deleting...</>
+                            : <><Trash2  className="w-3.5 h-3.5" /> Delete</>}
                         </button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        {/* Back button */}
-        <div className='p-3'>
-          <button
-            onClick={() => navigate('/master')}
-            className='px-4 py-2 hover:bg-gray-500 border border-black rounded-lg text-sm font-medium'
-          >
-             Back to Master
-          </button>
-        </div>
+          </div>
 
-        <br /><br /><br />
+        </main>
       </div>
     </div>
   );

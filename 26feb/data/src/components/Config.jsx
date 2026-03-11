@@ -1,27 +1,43 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getConfigByType, uploadDocuments } from '../api/index';
-
-const APPLICATION_TYPES = ['APPLY_PASSPORT', 'APPLY_DRIVING_LICENCE', 'APPLY_NOC'];
+import { getConfigByType, uploadDocuments, getAllTypes } from '../api/index';
+import { Upload, FileText, CheckCircle, XCircle, Loader2, ChevronDown } from 'lucide-react';
+import dubaiEmblem from '../assets/dubai-emblem.png';
+import dubaiSkyline from '../assets/dubai-skyline.jpg';
 
 const DOCUMENT_META = {
   aadhar_card: { label: 'Aadhar Card', accept: '.jpg,.jpeg,.png,.pdf' },
-  pan_card:    { label: 'PAN Card', accept: '.jpg,.jpeg,.png,.pdf' },
-  tenth_memo:  { label: '10th Memo', accept: '.jpg,.jpeg,.png,.pdf' },
-  twelth_memo: { label: '12th Memo',  accept: '.jpg,.jpeg,.png,.pdf' },
+  pan_card:    { label: 'PAN Card',    accept: '.jpg,.jpeg,.png,.pdf' },
+  tenth_memo:  { label: '10th Memo',   accept: '.jpg,.jpeg,.png,.pdf' },
+  twelth_memo: { label: '12th Memo',   accept: '.jpg,.jpeg,.png,.pdf' },
 };
 
-export default function UserPage() {
-  const [selectedType, setSelectedType] = useState('');
-  const [userName, setUserName] = useState('');
-  const [config, setConfig] = useState(null);
-  const [files, setFiles] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [message, setMessage] = useState(null);
+export default function Config() {
+  const [applicationTypes, setApplicationTypes] = useState([]);
+  const [selectedType, setSelectedType]         = useState('');
+  const [userName, setUserName]                 = useState('');
+  const [config, setConfig]                     = useState(null);
+  const [files, setFiles]                       = useState({});
+  const [loading, setLoading]                   = useState(false);
+  const [loadingTypes, setLoadingTypes]         = useState(true);
+  const [submitting, setSubmitting]             = useState(false);
+  const [message, setMessage]                   = useState(null);
 
-  const navigate=useNavigate();
-  
+  const navigate = useNavigate();
+
+  // ── Load all application types from DB ───────────────────
+  useEffect(() => {
+    getAllTypes()
+      .then(res => setApplicationTypes(res.data))
+      .catch(() => setApplicationTypes([
+        'APPLY_PASSPORT',
+        'APPLY_DRIVING_LICENCE',
+        'APPLY_NOC',
+      ]))
+      .finally(() => setLoadingTypes(false));
+  }, []);
+
+  // ── Fetch master config when type changes ────────────────
   useEffect(() => {
     if (!selectedType) { setConfig(null); return; }
     setLoading(true);
@@ -33,6 +49,11 @@ export default function UserPage() {
       .finally(() => setLoading(false));
   }, [selectedType]);
 
+  const showMessage = (type, text) => {
+    setMessage({ type, text });
+    setTimeout(() => setMessage(null), 4000);
+  };
+
   const handleFileChange = (field, file) => {
     setFiles(prev => ({ ...prev, [field]: file }));
   };
@@ -41,21 +62,18 @@ export default function UserPage() {
     ? Object.entries(config).filter(([, val]) => val?.display)
     : [];
 
+  // Submit documents 
   const handleSubmit = async () => {
     if (!userName.trim()) {
-      setMessage({ type: 'error', text: 'Please enter your name.' });
+      showMessage('error', 'Please enter your full name.');
       return;
     }
     if (!selectedType) {
-      setMessage({ type: 'error', text: 'Please select an application type.' });
+      showMessage('error', 'Please select an application type.');
       return;
     }
     if (enabledFields.length === 0) {
-      setMessage({ type: 'error', text: 'No documents required. Contact admin.' });
-      return;
-    }
-    if(!userName){
-      setMessage("Enter the username")
+      showMessage('error', 'No documents required. Contact administrator.');
       return;
     }
 
@@ -64,7 +82,7 @@ export default function UserPage() {
       .map(([field]) => DOCUMENT_META[field].label);
 
     if (missingFields.length > 0) {
-      setMessage({ type: 'error', text: `Please upload: ${missingFields.join(', ')}` });
+      showMessage('error', `Please upload: ${missingFields.join(', ')}`);
       return;
     }
 
@@ -80,166 +98,253 @@ export default function UserPage() {
       });
 
       await uploadDocuments(formData);
-      setMessage({ type: 'success', text: 'Documents submitted successfully!' });
+      showMessage('success', 'Documents submitted successfully!');
       setFiles({});
       setUserName('');
       setSelectedType('');
+      setConfig(null);
     } catch (err) {
-      setMessage({ type: 'error', text: err.response?.data?.message || 'Upload failed.' });
+      showMessage('error', err.response?.data?.message || 'Upload failed. Try again.');
     } finally {
       setSubmitting(false);
     }
   };
-const logout=()=>{
-  navigate("/");
-}
+
   return (
-    <div>
-      <div className='flex fixed p-2 w-full bg-red-100 justify-between'>
-        <p></p>
-        <h1 className='text-2xl' >User Portal</h1>
-        <button className='p-1 hover:bg-red-500 rounded-lg border-2 border-black' onClick={logout}>Logout</button>
-      </div>
-      
-      <div className='flex p-5 pt-[80px] bg-gradient-to-br from-red-200 to-blue-100 h-auto flex-col gap-2'>
-        <div>
-          <div>Step 1: Application Details</div>
+    <div className="relative min-h-screen overflow-hidden">
 
-          <div className='flex gap-2'>
-            <label>Full Name</label>
-            <input
-              type="text"
-              className='pl-3 rounded-full'
-              placeholder=" Enter your full name"
-              value={userName}
-              onChange={e => setUserName(e.target.value)}
-            />
-          </div>
-          
-          <div>
-            <label >Application Type</label>
-            <select
-              value={selectedType}
-              className='pl-3 rounded-full'
-              onChange={e => setSelectedType(e.target.value)}
-            >
-              <option value="">-- Select Application Type --</option>
-              {APPLICATION_TYPES.map(type => (
-                <option key={type} value={type}>{type.replace(/_/g, ' ')}</option>
-              ))}
-            </select>
-          </div>
-      </div>
+      {/* Background */}
+      <div className="fixed inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${dubaiSkyline})` }} />
+      <div className="fixed inset-0 bg-gradient-to-br from-[#152240]/55 via-[#152240]/50 to-[#152240]/55" />
+      <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FFBF00] to-transparent z-20" />
+      <div className="fixed bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FFBF00] to-transparent z-20" />
 
-      {selectedType && (
-        <div>
-          <div>
-            Step 2: Upload Required Documents 
-            {config && (
-              <span className="app-type-badge pl-2 text-blue-600">
-                 {enabledFields.length} document{enabledFields.length !== 1 ? 's' : ''} required
-              </span>
-            )}
-          </div>
+      <div className="relative z-10 min-h-screen flex flex-col">
 
-          {loading && (
-            <div className="loading">
-              <div className="spinner" />
-              Fetching requirements...
-            </div>
-          )}
-
-          {!loading && enabledFields.length === 0 && config && (
-            <div className="font-red-500 ">
-              <p>No documents are currently required for <strong>{selectedType}</strong>.</p>
-              <p style={{ fontSize: '0.85rem', marginTop: '0.5rem', color: '#94a3b8' }}>
-                Please contact the administrator.
-              </p>
-            </div>
-          )}
-
-          {!loading && enabledFields.length > 0 && (
-            <>
-              <div className="alert alert-info" style={{ marginBottom: '1.25rem' }}>
-                The following documents are required for <strong>{selectedType.replace(/_/g, ' ')}</strong>.
-                All fields are mandatory.
-              </div>
-
+        {/* Header */}
+        <header className="backdrop-blur-xl bg-white/5 border-b border-[#FFBF00]/20 px-6 py-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <img src={dubaiEmblem} alt="Dubai Emblem" className="w-10 h-10 object-contain" />
               <div>
-                {enabledFields.map(([field]) => {
-                  const meta = DOCUMENT_META[field];
-                  const file = files[field];
-                  return (
-                    <div key={field} className={`upload-field ${file ? 'has-file' : ''}`}>
-                      <label className="upload-label" htmlFor={`file-${field}`}>
-                        <span className="upload-icon">{meta.icon}</span>
-                        <strong style={{ fontSize: '0.9rem' }}>{meta.label}</strong>
-                        {file ? (
-                          <span > {file.name}</span>
-                        ) : (
-                          <span className="upload-text">
-                            <strong>Click to upload <sup className="text-red-500 font-bold">*</sup></strong> or drag & drop
-                            <br />JPG, PNG or PDF (max 5MB)
-                          </span>
-                        )}
-                      </label>
-                      <input
-                        id={`file-${field}`}
-                        type="file"
-                        accept={meta.accept}
-                        onChange={e => handleFileChange(field, e.target.files[0])}
-                      />
-                    </div>
-                  );
-                })}
+                <h1 className="text-lg font-bold text-[#FFBF00] tracking-wide">Government of Dubai</h1>
+                <p className="text-[#FFBF00]/80 text-xs tracking-widest uppercase">Document Submission Portal</p>
               </div>
+            </div>
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center gap-2 bg-gradient-to-r from-[#FFBF00] to-yellow-200 text-[#152240] font-semibold rounded-xl px-5 py-2.5 hover:from-[#FFBF00] hover:to-[#FFBF00] transition-all duration-300 shadow-lg shadow-[#FFBF00]/20"
+            >
+              Logout
+            </button>
+          </div>
+        </header>
 
-              <div style={{ marginTop: '1rem', fontSize: '0.85rem', color: '#64748b' }}>
-                {Object.keys(files).length} of {enabledFields.length} files uploaded
-              </div>
+        {/* Main */}
+        <main className="flex-1 p-6 max-w-3xl mx-auto w-full space-y-6">
 
-              <button
-                className="btn btn-success p-2 hover:bg-red-300 rounded-lg"
-                onClick={handleSubmit}
-                disabled={submitting}
-              >
-                {submitting ? 'Submitting...' : 'Submit Documents'}
-              </button>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br><p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-              <p></p><br></br>
-            </>
+          <div>
+            <h2 className="text-2xl font-bold text-[#FFBF00]">User Portal</h2>
+            <p className="text-[#FFBF00]/60 text-sm mt-1">
+              Select your application type and upload the required documents.
+            </p>
+          </div>
+
+          {/* Message */}
+          {message && (
+            <div className={`flex items-center gap-2 text-sm rounded-xl px-4 py-3 border ${
+              message.type === 'success'
+                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                : 'bg-red-500/10 border-red-500/20 text-red-400'
+            }`}>
+              {message.type === 'success'
+                ? <CheckCircle className="w-4 h-4 shrink-0" />
+                : <XCircle    className="w-4 h-4 shrink-0" />}
+              {message.text}
+            </div>
           )}
-        </div>
-      )}
+
+          {/* Step 1 — Application Details */}
+          <div className="backdrop-blur-xl bg-white/10 border border-[#FFBF00]/20 rounded-2xl shadow-xl overflow-hidden">
+            <div className="px-6 py-4 border-b border-[#FFBF00]/10">
+              <h3 className="text-[#FFBF00] text-lg font-semibold flex items-center gap-2">
+                <FileText className="w-5 h-5 text-[#FFBF00]/70" />
+                Step 1: Application Details
+              </h3>
+            </div>
+
+            <div className="p-6 space-y-4">
+
+              {/* Full Name */}
+              <div>
+                <label className="block text-[#FFBF00]/70 text-sm font-medium mb-1">
+                  Full Name <span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={userName}
+                  onChange={e => setUserName(e.target.value)}
+                  className="w-full bg-white/10 border border-[#FFBF00]/20 text-[#FFBF00] placeholder-[#FFBF00]/30 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#FFBF00]/60 focus:bg-white/15 transition-all"
+                />
+              </div>
+
+              {/* Application Type Dropdown */}
+              <div>
+                <label className="block text-[#FFBF00]/70 text-sm font-medium mb-1">
+                  Application Type <span className="text-red-400">*</span>
+                </label>
+                <div className="relative">
+                  <select
+                    value={selectedType}
+                    onChange={e => setSelectedType(e.target.value)}
+                    className="w-full bg-white/10 border border-[#FFBF00]/20 text-[#FFBF00] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#FFBF00]/60 appearance-none cursor-pointer transition-all"
+                  >
+                    <option value="" className="bg-[#152240]">-- Select Application Type --</option>
+                    {loadingTypes ? (
+                      <option disabled className="bg-[#152240]">Loading...</option>
+                    ) : (
+                      applicationTypes.map(type => (
+                        <option key={type} value={type} className="bg-[#152240]">
+                          {type.replace(/_/g, ' ')}
+                        </option>
+                      ))
+                    )}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#FFBF00]/50 pointer-events-none" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Step 2 — Upload Documents */}
+          {selectedType && (
+            <div className="backdrop-blur-xl bg-white/10 border border-[#FFBF00]/20 rounded-2xl shadow-xl overflow-hidden">
+              <div className="px-6 py-4 border-b border-[#FFBF00]/10 flex items-center justify-between">
+                <h3 className="text-[#FFBF00] text-lg font-semibold flex items-center gap-2">
+                  <Upload className="w-5 h-5 text-[#FFBF00]/70" />
+                  Step 2: Upload Required Documents
+                </h3>
+                {config && (
+                  <span className="text-xs bg-[#FFBF00]/10 border border-[#FFBF00]/30 text-[#FFBF00]/70 px-3 py-1 rounded-full font-medium">
+                    {enabledFields.length} doc{enabledFields.length !== 1 ? 's' : ''} required
+                  </span>
+                )}
+              </div>
+
+              <div className="p-6">
+
+                {/* Loading */}
+                {loading && (
+                  <div className="flex items-center justify-center gap-2 py-8 text-[#FFBF00]/50">
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Fetching requirements...
+                  </div>
+                )}
+
+                {/* No docs required */}
+                {!loading && enabledFields.length === 0 && config && (
+                  <div className="text-center py-8">
+                    <p className="text-[#FFBF00]/60 text-sm">
+                      No documents are currently required for <strong className="text-[#FFBF00]">{selectedType.replace(/_/g, ' ')}</strong>.
+                    </p>
+                    <p className="text-[#FFBF00]/30 text-xs mt-1">Please contact the administrator.</p>
+                  </div>
+                )}
+
+                {/* Upload fields */}
+                {!loading && enabledFields.length > 0 && (
+                  <div className="space-y-4">
+
+                    <p className="text-[#FFBF00]/60 text-sm">
+                      The following documents are required for{' '}
+                      <strong className="text-[#FFBF00]">{selectedType.replace(/_/g, ' ')}</strong>.
+                      All fields are mandatory.
+                    </p>
+
+                    {/* File upload cards */}
+                    {enabledFields.map(([field]) => {
+                      const meta = DOCUMENT_META[field];
+                      const file = files[field];
+                      return (
+                        <div
+                          key={field}
+                          className={`border rounded-xl p-4 transition-all duration-300 ${
+                            file
+                              ? 'bg-emerald-500/10 border-emerald-500/30'
+                              : 'bg-white/5 border-[#FFBF00]/20 hover:border-[#FFBF00]/40 hover:bg-white/10'
+                          }`}
+                        >
+                          <label
+                            htmlFor={`file-${field}`}
+                            className="flex items-center justify-between cursor-pointer"
+                          >
+                            {/* Left — label */}
+                            <div>
+                              <p className="text-[#FFBF00] font-semibold text-sm">
+                                {meta.label}
+                                <span className="text-red-400 ml-1">*</span>
+                              </p>
+                              {file ? (
+                                <p className="text-emerald-400 text-xs mt-0.5 flex items-center gap-1">
+                                  <CheckCircle className="w-3 h-3" /> {file.name}
+                                </p>
+                              ) : (
+                                <p className="text-[#FFBF00]/30 text-xs mt-0.5">
+                                  JPG, PNG or PDF — max 5MB
+                                </p>
+                              )}
+                            </div>
+
+                            {/* Right — upload button */}
+                            <div className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+                              file
+                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                : 'bg-[#FFBF00]/10 text-[#FFBF00] border border-[#FFBF00]/30 hover:bg-[#FFBF00]/20'
+                            }`}>
+                              <Upload className="w-3.5 h-3.5" />
+                              {file ? 'Change' : 'Upload'}
+                            </div>
+                          </label>
+
+                          <input
+                            id={`file-${field}`}
+                            type="file"
+                            accept={meta.accept}
+                            className="hidden"
+                            onChange={e => handleFileChange(field, e.target.files[0])}
+                          />
+                        </div>
+                      );
+                    })}
+
+                    {/* Progress */}
+                    <p className="text-[#FFBF00]/40 text-xs">
+                      {Object.keys(files).length} of {enabledFields.length} files uploaded
+                    </p>
+
+                    {/* Submit */}
+                    <button
+                      onClick={handleSubmit}
+                      disabled={submitting}
+                      className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#FFBF00] to-yellow-500 text-[#152240] font-semibold rounded-xl h-12 px-8 hover:from-[#FFBF00] hover:to-[#FFBF00] transition-all duration-300 shadow-lg shadow-[#FFBF00]/20 hover:shadow-[#FFBF00]/40 disabled:opacity-50 mt-2"
+                    >
+                      {submitting ? (
+                        <><Loader2 className="w-4 h-4 animate-spin" /> Submitting...</>
+                      ) : (
+                        <><Upload className="w-4 h-4" /> Submit Documents</>
+                      )}
+                    </button>
+
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+        </main>
       </div>
     </div>
   );
 }
-
